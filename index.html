@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CivicVoice Chatbot</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #dcedc8, #f0f4c3); /* Light green tones */
+      color: #333;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .chat-container {
+      display: flex;
+      gap: 30px;
+      max-width: 1200px;
+      margin: auto;
+      flex-wrap: wrap;
+    }
+
+    .chat-box {
+      background: #ffffff;
+      color: #333;
+      flex: 1;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      min-width: 350px;
+    }
+
+    .info-box {
+      background: #e6ee9c;
+      color: #333;
+      flex: 0.8;
+      padding: 20px 25px;
+      border-radius: 16px;
+      min-width: 280px;
+    }
+
+    h3 {
+      font-weight: 600;
+      color: #558b2f;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: #33691e;
+    }
+
+    .form-control {
+      border-radius: 10px;
+      border: 1px solid #aed581;
+    }
+
+    .btn-submit {
+      background-color: #558b2f;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      width: 100%;
+      font-weight: 600;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .btn-submit:hover {
+      background-color: #33691e;
+    }
+
+    .preview-img {
+      display: block;
+      margin-top: 10px;
+      border-radius: 8px;
+      max-height: 180px;
+      max-width: 100%;
+      border: 1px solid #d6eaff;
+    }
+
+    .info-box h5 {
+      color: #558b2f;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .info-box ul {
+      padding-left: 18px;
+    }
+
+    .info-box li {
+      margin-bottom: 8px;
+    }
+
+    #loading {
+      margin-top: 20px;
+      display: none;
+    }
+
+    .spinner-border {
+      color: #558b2f;
+    }
+
+    #popupMessage {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #ffffff;
+      color: #33691e;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      display: none;
+      z-index: 9999;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .cpgrams-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #1b5e20;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-box">
+      <h3>🤖 CivicVoice Chatbot</h3>
+      <form id="complaintForm">
+        <div class="mb-3">
+          <label for="templateSelect" class="form-label">Choose Complaint Type</label>
+          <select id="templateSelect" class="form-control mb-2" onchange="loadTemplate()">
+            <option value="">-- Select an issue --</option>
+            <option value="street">Streetlight Problem</option>
+            <option value="garbage">Garbage Overflow</option>
+            <option value="water">Water Supply Issue</option>
+            <option value="harassment">Harassment Incident</option>
+            <option value="drugs">Drug Activity</option>
+            <option value="noise">Noise Disturbance</option>
+            <option value="road">Damaged Road</option>
+            <option value="electricity">Electricity Cut</option>
+            <option value="drainage">Blocked Drainage</option>
+            <option value="illegal">Illegal Parking</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="complaint" class="form-label">Describe Your Issue</label>
+          <textarea name="complaint" class="form-control" id="complaint" rows="5" required placeholder="Ex: Broken streetlight near Gate 4..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="image" class="form-label">Attach an Image (optional)</label>
+          <input class="form-control" type="file" name="image" id="image" accept="image/*" onchange="previewImage()">
+          <img id="preview" class="preview-img" style="display:none;" />
+        </div>
+
+        <button type="submit" class="btn btn-submit">🚀 Submit Complaint</button>
+      </form>
+
+      <a href="https://pgportal.gov.in/" target="_blank" class="cpgrams-link">🚨 Emergency? Click here to report directly on CPGRAMS</a>
+
+      <div id="loading" class="text-center">
+        <div class="spinner-border" role="status"></div>
+        <p class="mt-2">Submitting your complaint...</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <h5>📋 Complaint Format Letters</h5>
+      <ul>
+        <li><b>Streetlight:</b> Streetlight near Gate 4 is broken since 2 days. Please repair it to avoid accidents at night.</li>
+        <li><b>Garbage:</b> Overflowing dustbin at Sector 5 causing bad smell. Request quick cleanup.</li>
+        <li><b>Water Supply:</b> No water supply in Block A since 7 AM. Kindly resolve it urgently.</li>
+        <li><b>Harassment:</b> Harassment incident near park around 6 PM yesterday. Request strict action.</li>
+        <li><b>Drugs:</b> Suspicious drug activity near back alley of community hall. Needs urgent inspection.</li>
+        <li><b>Noise:</b> Loud music from XYZ building past midnight. Please investigate.</li>
+        <li><b>Road:</b> Deep potholes on the main road near XYZ stop. Dangerous for drivers.</li>
+        <li><b>Electricity:</b> Power cut in Zone C for 5 hours now. Kindly restore electricity.</li>
+        <li><b>Drainage:</b> Blocked drainage line on ABC Road. Water overflowing onto streets.</li>
+        <li><b>Illegal Parking:</b> Vehicles parked illegally in front of shops in Market Street. Causing traffic block.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="popupMessage">✅ Your complaint has been submitted!</div>
+
+  <script>
+    function previewImage() {
+      const fileInput = document.getElementById("image");
+      const preview = document.getElementById("preview");
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          preview.src = e.target.result;
+          preview.style.display = "block";
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      }
+    }
+
+    function loadTemplate() {
+      const complaintBox = document.getElementById("complaint");
+      const value = document.getElementById("templateSelect").value;
+      const templates = {
+        street: "Date: [Enter Date]\nTime: [Enter Time]\nPlace: Gate 4, Block B\nIssue: The streetlight has not been working for the past two nights, causing complete darkness and risk of accidents. Kindly fix it at the earliest.",
+        garbage: "Date: [Enter Date]\nTime: [Enter Time]\nPlace: Sector 5\nIssue: Garbage bins have been overflowing and the waste is spreading, causing foul smell and health concerns. Immediate action is needed.",
+        water: "Date: [Enter Date]\nTime: [Enter Time]\nPlace: Block A, ABC Colony\nIssue: There has been no water supply since morning. This is disrupting our daily routine and hygiene. Kindly resolve it immediately.",
+        harassment: "Date: [Enter Date]\nTime: [Enter Time]\nPlace: Near Main Park\nIssue: A harassment incident occurred involving local boys. Request immediate investigation and safety monitoring.",
+        drugs: "Date: [Enter Date]\nTime: [Enter Time]\nPlace: Back alley near Community Hall\nIssue: There have been suspicious drug dealings happening at night. Please investigate and ensure neighborhood safety.",
+        noise: "Date: [Enter Date]\nTime: [Enter Time]\nPlace: XYZ Event Hall\nIssue: Continuous loud music being played past midnight. Request action to maintain peace in the area.",
+        road: "Date: [Enter Date]\nTime: [Enter Time]\nPlace: Main Road, Near Station\nIssue: The road has multiple potholes causing danger to vehicles. Please conduct repairs urgently.",
+        electricity: "Date: [Enter Date]\nTime: [Enter Time]\nPlace: Zone C\nIssue: Sudden power cut for several hours. Please restore power as soon as possible.",
+        drainage: "Date: [Enter Date]\nTime: [Enter Time]\nPlace: ABC Road\nIssue: Blocked drainage lines are causing water to spill onto roads, creating hygiene and traffic issues.",
+        illegal: "Date: [Enter Date]\nTime: [Enter Time]\nPlace: Market Street\nIssue: Vehicles are parked illegally in front of shops, blocking traffic and creating inconvenience. Kindly take necessary action."
+      };
+      complaintBox.value = templates[value] || "";
+    }
+
+    document.getElementById("complaintForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      document.getElementById("loading").style.display = "block";
+      setTimeout(() => {
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("popupMessage").style.display = "block";
+        setTimeout(() => {
+          document.getElementById("popupMessage").style.display = "none";
+        }, 3000);
+        this.reset();
+        document.getElementById("preview").style.display = "none";
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
