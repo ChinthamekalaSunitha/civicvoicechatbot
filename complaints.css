@@ -1,0 +1,122 @@
+/* General Page Style */
+body {
+  font-family: 'Inter', sans-serif;
+  background: #d0f0c0; /* Light green background */
+  margin: 0;
+  padding: 40px 20px;
+  color: #333;
+  min-height: 100vh;
+}
+
+/* Container for chatbot and info box */
+.chat-container {
+  display: flex;
+  gap: 30px;
+  max-width: 1200px;
+  margin: auto;
+  flex-wrap: wrap;
+}
+
+/* Chatbot Form Styling */
+.chat-box {
+  background: #ffffff;
+  color: #333;
+  flex: 1;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  min-width: 350px;
+}
+
+/* Complaint Format Panel */
+.info-box {
+  background: #f0fff0;
+  color: #333;
+  flex: 0.8;
+  padding: 20px 25px;
+  border-radius: 16px;
+  min-width: 280px;
+}
+
+/* Heading Style */
+h3, h5 {
+  font-weight: 600;
+  color: #2e7d32;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+/* Label Styling */
+.form-label {
+  font-weight: 500;
+  color: #2e7d32;
+}
+
+/* Input Fields */
+.form-control {
+  border-radius: 10px;
+  border: 1px solid #66bb6a;
+}
+
+/* Submit Button */
+.btn-submit {
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  width: 100%;
+  font-weight: 600;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-submit:hover {
+  background-color: #1b5e20;
+}
+
+/* Image Preview */
+.preview-img {
+  display: block;
+  margin-top: 10px;
+  border-radius: 8px;
+  max-height: 180px;
+  max-width: 100%;
+  border: 1px solid #a5d6a7;
+}
+
+/* Info Box Details */
+.info-box ul {
+  padding-left: 18px;
+}
+
+.info-box li {
+  margin-bottom: 8px;
+}
+
+/* Loader */
+#loading {
+  margin-top: 20px;
+  display: none;
+  text-align: center;
+}
+
+.spinner-border {
+  color: #2e7d32;
+}
+
+/* Popup Message */
+#popupMessage {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  color: #2e7d32;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  display: none;
+  z-index: 9999;
+  font-weight: bold;
+  text-align: center;
+}
